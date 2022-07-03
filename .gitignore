@@ -40,4 +40,4 @@ jspm_packages
 
 devtest.js
 
-config/*
+config/*.json
