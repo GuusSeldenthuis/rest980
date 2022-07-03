@@ -49,11 +49,16 @@ function startApp () {
   pathLayerContext.lineCap = 'round';
 }
 
-function startMissionLoop () {
+async function startMissionLoop () {
   if (mapping) {
     $('#mapStatus').html('getting point...');
-    $.get('/api/local/info/mission', function (data) {
-      messageHandler(data);
+
+    $.get('/api/local/info/state', function (data) {
+      try {
+        messageHandler(data);
+      } catch (e) {
+        console.error(e);
+      }
       setTimeout(startMissionLoop, updateEvery);
     });
   } else {
@@ -62,6 +67,7 @@ function startMissionLoop () {
 }
 
 function messageHandler (msg) {
+  console.log(JSON.stringify(msg));
   // msg is the object returned by dorita980.getMission() promise.
   if (msg.cleanMissionStatus) {
     // firmware version 2
@@ -128,7 +134,7 @@ function drawStep (x, y, theta, cycle, phase) {
 }
 
 function drawRobotBody (x, y, theta) {
-  theta = parseInt(theta, 10);
+  theta = (parseInt(theta, 10) * -1);
   var radio = 15;
   robotBodyLayerContext.clearRect(0, 0, robotBodyLayer.width, robotBodyLayer.height);
   robotBodyLayerContext.beginPath();
